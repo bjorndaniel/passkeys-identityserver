@@ -1,0 +1,70 @@
+﻿@page "/"
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<AuthorizeView>
+    <Authorized>
+        <div class="mt-4">
+            <h3>User Claims</h3>
+            <div class="alert alert-info">
+                <p><strong>Welcome, @context.User.Identity?.Name!</strong></p>
+                <p>You are authenticated. Here are your claims:</p>
+            </div>
+            
+            @if (claims != null && claims.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Claim Type</th>
+                                <th>Claim Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var claim in claims)
+                            {
+                                <tr>
+                                    <td><code>@claim.Type</code></td>
+                                    <td>@claim.Value</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning">
+                    <p>No claims found.</p>
+                </div>
+            }
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <div class="mt-4">
+            <div class="alert alert-secondary">
+                <p>You are not authenticated. <a href="/Login">Click here to log in</a>.</p>
+            </div>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private IEnumerable<Claim>? claims;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        if (authState.User.Identity?.IsAuthenticated == true)
+        {
+            claims = authState.User.Claims.OrderBy(c => c.Type);
+        }
+    }
+}
