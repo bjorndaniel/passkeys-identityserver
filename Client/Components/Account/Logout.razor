@@ -1,0 +1,18 @@
+@page "/Account/Logout"
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authentication.Cookies
+@using Microsoft.AspNetCore.Authentication.OpenIdConnect
+@inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
+
+<h3>Logout</h3>
+
+<p>Signing out...</p>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        // Redirect to the OpenID Connect signout
+        await JSRuntime.InvokeVoidAsync("window.location.href", "/Account/SignOut");
+    }
+}

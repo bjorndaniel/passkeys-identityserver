@@ -1,0 +1,17 @@
+@page "/Account/Login"
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authentication.OpenIdConnect
+@inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
+
+<h3>Login</h3>
+
+<p>Redirecting to Identity Server...</p>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        // Redirect to the OpenID Connect challenge
+        await JSRuntime.InvokeVoidAsync("window.location.href", "/Account/Challenge");
+    }
+}
